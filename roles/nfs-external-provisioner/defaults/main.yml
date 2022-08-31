@@ -1,0 +1,4 @@
+nfs_server: storage.local
+nfs_path: /volume2/nfs
+storageClass_onDelete: true
+target_namespace: default

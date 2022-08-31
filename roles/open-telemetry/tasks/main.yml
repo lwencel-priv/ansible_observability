@@ -1,0 +1,29 @@
+- name: Download Open Telemetry operator yaml
+  ansible.builtin.get_url:
+    url: "https://github.com/open-telemetry/opentelemetry-operator/releases/{{ version }}/download/opentelemetry-operator.yaml"
+    dest: ~/opentelemetry-operator.yml
+    mode: '0664'
+
+- name: Deploy Open Telemetry operator
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    src: ~/opentelemetry-operator.yml
+
+- name: Wait till operator is ready
+  kubernetes.core.k8s_info:
+    kind: Deployment
+    wait: yes
+    name: opentelemetry-operator-controller-manager
+    namespace: opentelemetry-operator-system
+    wait_sleep: 10
+    wait_timeout: 600
+
+- name: Create namespace for Open Telemetry instance
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/namespace.yml
+
+- name: Deploy Open Telemetry collector
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/otel-collector.yaml

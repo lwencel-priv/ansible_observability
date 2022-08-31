@@ -1,0 +1,64 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: apm-elastic-agent-ea-cert
+  namespace: "{{ elastic_namespace }}"
+spec:
+  isCA: false
+  dnsNames:
+    - apm-agent-http
+    - apm-agent-http.{{ elastic_namespace }}.svc
+    - apm-agent-http.{{ elastic_namespace }}.svc.cluster.local
+  subject:
+    organizations:
+      - example
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned-cluster-issuer
+  secretName: apm-elastic-agent-ea-cert
+---
+apiVersion: agent.k8s.elastic.co/v1alpha1
+kind: Agent
+metadata: 
+  name: elastic-agent
+  namespace: "{{ elastic_namespace }}"
+spec:
+  version: "{{ elastic_stack_version }}"
+  kibanaRef:
+    name: kibana
+  fleetServerRef: 
+    name: fleet-server
+  mode: fleet
+  deployment:
+    replicas: 1
+    podTemplate:
+      spec:
+        containers:
+        - name: agent
+          volumeMounts:
+          - mountPath: "/etc/apm/tls"
+            name: tls
+            readOnly: true
+        securityContext:
+          runAsUser: 0
+        volumes:
+        - name: tls
+          secret:
+            secretName: apm-elastic-agent-ea-cert
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apm-agent-http
+  namespace: "{{ elastic_namespace }}"
+spec:
+  selector:
+    agent.k8s.elastic.co/name: elastic-agent
+  ports:
+  - protocol: TCP
+    port: 8200

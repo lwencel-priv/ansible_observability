@@ -1,0 +1,29 @@
+- name: Create namespace
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/namespace.yaml
+
+- name: Create users secret
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/users_secret.yaml
+
+- name: Create elastic cluster
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/elastic.yaml
+
+- name: Create kibana
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/kibana.yaml
+
+- name: Create Fleet
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/fleet.yaml
+
+- name: Create APM
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/apm.yaml

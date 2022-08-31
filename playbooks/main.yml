@@ -1,0 +1,11 @@
+---
+- name: Install Elastic
+  hosts: localhost
+  vars:
+    deployment_state: present
+  roles:
+  - nfs-external-provisioner
+  - cert-manager
+  - elastic
+  - open-telemetry
+  - jenkins

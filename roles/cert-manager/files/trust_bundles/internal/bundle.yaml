@@ -1,0 +1,17 @@
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: internal-root-ca.crt
+  namespace: cert-manager
+spec:
+  sources:
+  # A Secret in the trust namespace created via a cert-manager Certificate
+  - secret:
+      name: "internal-ca-cert"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "ca.crt"
+    namespaceSelector:
+      matchLabels:
+        certificate-authority/inject: "internal-root-ca"

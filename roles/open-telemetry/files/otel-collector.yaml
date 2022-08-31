@@ -1,0 +1,74 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: otel-collector-cert
+  namespace: "{{ k8s_namespace }}"
+spec:
+  isCA: false
+  commonName: otel
+  subject:
+    organizations:
+    - Trust service
+  dnsNames:
+    - otel-collector-http
+    - otel-collector-http.{{ k8s_namespace }}.svc
+    - otel-collector-http.{{ k8s_namespace }}.svc.cluster.local
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned-cluster-issuer
+  secretName: otel-collector-cert
+---
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel-collector
+  namespace: "{{ k8s_namespace }}"
+spec:
+  volumes:
+  - name: tls
+    secret:
+      secretName: otel-collector-cert
+  volumeMounts:
+  - name: tls
+    mountPath: "/etc/tls"
+    readOnly: true
+  config: |
+    receivers: 
+        otlp:
+          protocols:
+            grpc:
+            http:
+
+    processors: 
+      memory_limiter:
+        check_interval: 1s
+        limit_mib: 2000
+      batch:
+
+    exporters:
+      logging:
+        loglevel: warn 
+      otlp/elastic: 
+        # Elastic APM server https endpoint without the "https://" prefix
+        endpoint: "apm-agent-http.elastic.svc.cluster.local:8200"  
+        headers:
+          Authorization: "Bearer QPBAU86Y0Sdh1HbgwfSof1a5vemv8?M2Xoqd0P=ehLYyWfFRAQe5BkH?TyC"
+        tls:
+          ca_file: /etc/tls/ca.crt
+
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          exporters: [logging, otlp/elastic]
+        metrics:
+          receivers: [otlp]
+          exporters: [logging, otlp/elastic]
+        logs: 
+          receivers: [otlp]
+          exporters: [logging, otlp/elastic]

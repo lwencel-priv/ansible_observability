@@ -1,0 +1,100 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kibana-kb-cert
+  namespace: {{ elastic_namespace }}
+spec:
+  isCA: false
+  dnsNames:
+    - kibana-kb-http
+    - kibana-kb-http.{{ elastic_namespace }}.svc
+    - kibana-kb-http.{{ elastic_namespace }}.svc.cluster.local
+  subject:
+    organizations:
+      - example
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  issuerRef:
+    kind: ClusterIssuer
+    name: selfsigned-cluster-issuer
+  secretName: kibana-kb-cert
+---
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: kibana
+  namespace: {{ elastic_namespace }}
+spec:
+  version: "{{ elastic_stack_version }}"
+  http:
+    tls:
+      certificate:
+        secretName: kibana-kb-cert
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
+  config:
+    xpack.fleet.agents.elasticsearch.hosts:
+    - "https://elasticsearch-es-http.elastic.svc:9200"
+    xpack.fleet.agents.fleet_server.hosts: 
+    - "https://fleet-server-agent-http.elastic.svc:8220"
+    xpack.fleet.packages:
+    - name: system
+      version: latest
+    - name: elastic_agent
+      version: latest
+    - name: fleet_server
+      version: latest
+    - name: apm
+      version: latest
+    xpack.fleet.agentPolicies:
+    - name: Fleet Server on ECK policy
+      id: eck-fleet-server
+      is_default_fleet_server: true
+      namespace: {{ elastic_namespace }}
+      monitoring_enabled:
+      - logs
+      - metrics
+      package_policies:
+      - name: fleet_server-1
+        id: fleet_server-1
+        package:
+          name: fleet_server
+    - name: Elastic Agent on ECK policy
+      id: eck-agent
+      namespace: {{ elastic_namespace }}
+      monitoring_enabled:
+      - logs
+      - metrics
+      unenroll_timeout: 900
+      is_default: true
+      package_policies:
+      - name: system-1
+        id: system-1
+        package:
+          name: system
+      - name: apm-1
+        package:
+          name: apm
+        inputs:
+        - type: apm
+          enabled: true
+          vars:
+          - name: host
+            frozen: true
+            value: 0.0.0.0:8200
+          - name: tls_enabled
+            frozen: true
+            value: true
+          - name: tls_certificate
+            frozen: true
+            value: /etc/apm/tls/tls.crt
+          - name: tls_key
+            frozen: true
+            value: /etc/apm/tls/tls.key
+          - name: secret_token
+            frozen: true
+            value: QPBAU86Y0Sdh1HbgwfSof1a5vemv8?M2Xoqd0P=ehLYyWfFRAQe5BkH?TyC
