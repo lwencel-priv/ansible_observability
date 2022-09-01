@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: jenkins-operator-configuration
-  namespace: "{{ k8s_namespace }}"
+  namespace: "{{ jenkins_namespace }}"
 data:
   1-main.yaml: |
     jenkins:

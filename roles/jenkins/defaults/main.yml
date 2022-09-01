@@ -1,7 +1,5 @@
-k8s_namespace: "jenkins"
-deployment_state: "absent"
-jenkins_version: "2.60.3"
+jenkins_namespace: "jenkins"
+deployment_state: "present"
+jenkins_chart_version: "0.6.2"
 jenkins_image_name: "jenkins/jenkins:{{ jenkins_version }}"
 jenkins_pvc_name: nfs-jenkins
-jenkins_storage_class_name: nfs-client
-build_and_release_image: false
