@@ -6,7 +6,7 @@
 - name: Add stable chart repo
   kubernetes.core.helm_repository:
     state: "{{ deployment_state }}" 
-    name: jetstack
+    name: jenkins
     repo_url: "https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/chart"
 
 - name: Deploy jenkins-operator
