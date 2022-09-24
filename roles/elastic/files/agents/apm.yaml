@@ -25,7 +25,7 @@ spec:
 apiVersion: agent.k8s.elastic.co/v1alpha1
 kind: Agent
 metadata: 
-  name: elastic-agent
+  name: apm-agent
   namespace: "{{ elastic_namespace }}"
 spec:
   version: "{{ elastic_stack_version }}"
@@ -34,6 +34,7 @@ spec:
   fleetServerRef: 
     name: fleet-server
   mode: fleet
+  policyID: apm-policy
   deployment:
     replicas: 1
     podTemplate:
@@ -58,7 +59,7 @@ metadata:
   namespace: "{{ elastic_namespace }}"
 spec:
   selector:
-    agent.k8s.elastic.co/name: elastic-agent
+    agent.k8s.elastic.co/name: apm-agent
   ports:
   - protocol: TCP
     port: 8200

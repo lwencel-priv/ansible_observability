@@ -21,9 +21,14 @@
 - name: Create Fleet
   kubernetes.core.k8s:
     state: "{{ deployment_state }}"
-    template: files/fleet.yaml
+    template: files/agents/fleet.yaml
 
-- name: Create APM
+- name: Create APM Agent
   kubernetes.core.k8s:
     state: "{{ deployment_state }}"
-    template: files/apm.yaml
+    template: files/agents/apm.yaml
+
+- name: Create System & Kubernetes Agent
+  kubernetes.core.k8s:
+    state: "{{ deployment_state }}"
+    template: files/agents/system_and_kubernetes.yaml
