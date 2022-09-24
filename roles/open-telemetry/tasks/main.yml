@@ -1,6 +1,6 @@
 - name: Download Open Telemetry operator yaml
   ansible.builtin.get_url:
-    url: "https://github.com/open-telemetry/opentelemetry-operator/releases/{{ version }}/download/opentelemetry-operator.yaml"
+    url: "https://github.com/open-telemetry/opentelemetry-operator/releases/{{ otel_version }}/download/opentelemetry-operator.yaml"
     dest: ~/opentelemetry-operator.yml
     mode: '0664'
 

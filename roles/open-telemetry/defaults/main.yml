@@ -1,2 +1,2 @@
-version: "latest"
-k8s_namespace: otel
+otel_version: "latest"
+otel_namespace: otel

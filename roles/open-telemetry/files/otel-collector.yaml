@@ -3,7 +3,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: otel-collector-cert
-  namespace: "{{ k8s_namespace }}"
+  namespace: "{{ otel_namespace }}"
 spec:
   isCA: false
   commonName: otel
@@ -12,8 +12,8 @@ spec:
     - Trust service
   dnsNames:
     - otel-collector-http
-    - otel-collector-http.{{ k8s_namespace }}.svc
-    - otel-collector-http.{{ k8s_namespace }}.svc.cluster.local
+    - otel-collector-http.{{ otel_namespace }}.svc
+    - otel-collector-http.{{ otel_namespace }}.svc.cluster.local
   privateKey:
     algorithm: RSA
     encoding: PKCS1
@@ -27,7 +27,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
   name: otel-collector
-  namespace: "{{ k8s_namespace }}"
+  namespace: "{{ otel_namespace }}"
 spec:
   volumes:
   - name: tls
