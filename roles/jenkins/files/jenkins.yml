@@ -23,13 +23,13 @@ spec:
   master:
     basePlugins:
     - name: kubernetes
-      version: "3704.va_08f0206b_95e"
+      version: "3706.vdfb_d599579f3"
     - name: workflow-job
-      version: "1232.v5a_4c994312f1"
+      version: "1239.v71b_b_a_124a_725"
     - name: workflow-aggregator
       version: "590.v6a_d052e5a_a_b_5"
     - name: git
-      version: "4.11.5"
+      version: "4.12.1"
     - name: job-dsl
       version: "1.81"
     - name: configuration-as-code
@@ -39,6 +39,8 @@ spec:
     plugins:
     - name: opentelemetry
       version: "2.9.2"
+    - name: ssh-slaves
+      version: 2.846.v1b_70190624f5
     disableCSRFProtection: false
     containers:
       - name: jenkins-master
