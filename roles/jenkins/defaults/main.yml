@@ -1,5 +1,6 @@
 jenkins_namespace: "jenkins"
 deployment_state: "present"
 jenkins_chart_version: "0.6.2"
-jenkins_image_name: "jenkins/jenkins:{{ jenkins_version }}"
+jenkins_image_name: "jenkins/jenkins"
+jenkins_image_tag: "2.366-alpine"
 jenkins_pvc_name: nfs-jenkins

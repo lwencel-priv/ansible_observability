@@ -37,8 +37,8 @@ spec:
   elasticsearchRef:
     name: elasticsearch
   config:
-{% if proxy_url %}
-    xpack.fleet.registryProxyUrl: "{{ proxy_url }}"
+{% if http_proxy %}
+    xpack.fleet.registryProxyUrl: "http://{{ http_proxy }}"
 {% endif %}
     xpack.fleet.agents.elasticsearch.hosts:
     - "https://elasticsearch-es-http.elastic.svc:9200"

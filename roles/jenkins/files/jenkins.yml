@@ -44,8 +44,19 @@ spec:
     disableCSRFProtection: false
     containers:
       - name: jenkins-master
-        image: jenkins/jenkins:2.366-alpine
+        image: "{{ jenkins_image_name }}:{{ jenkins_image_tag }}"
         imagePullPolicy: IfNotPresent
+{% if http_proxy %}
+        env:
+        - name: http_proxy
+          value: "http://{{ http_proxy }}"
+        - name: https_proxy
+          value: "http://{{ http_proxy }}"
+        - name: HTTP_PROXY
+          value: "http://{{ http_proxy }}"
+        - name: HTTPS_PROXY
+          value: "http://{{ http_proxy }}"
+{% endif %}
         livenessProbe:
           failureThreshold: 12
           httpGet:

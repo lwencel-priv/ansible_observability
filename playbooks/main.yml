@@ -4,6 +4,7 @@
   vars:
     deployment_state: present
   roles:
+  - facts/http_proxy
   - nfs-external-provisioner
   - cert-manager
   - elastic

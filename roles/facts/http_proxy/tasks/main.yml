@@ -1,0 +1,9 @@
+- set_fact:
+    http_proxy: "\
+      {% if proxy_domain %}\
+        {{ proxy_domain }}\\{{ proxy_username }}:{{ proxy_password }}@{{ proxy_url }}:{{ proxy_port }}\
+      {% elif proxy_username and proxy_password %}\
+        {{ proxy_username }}:{{ proxy_password }}@{{ proxy_url }}:{{ proxy_port }}\
+      {% elif proxy_url and proxy_port %}\
+        {{ proxy_url }}:{{ proxy_port }}\
+      {% endif %}"
