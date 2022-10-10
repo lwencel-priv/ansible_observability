@@ -10,7 +10,7 @@ spec:
   fleetServerRef: 
     name: fleet-server
   mode: fleet
-  policyId: system-kubernetes-policy
+  policyID: system-kubernetes-policy
   daemonSet:
     podTemplate:
       spec:
